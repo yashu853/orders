@@ -1,137 +1,173 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Restaurant Orders with Chatbot</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Restaurant Orders</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f8fc;
-      padding: 20px;
-      color: #333;
-    }
-
-    h2, h3 {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f4ff, #dbe9ff);
+      padding: 30px;
       color: #2c3e50;
     }
 
-    input, select, button {
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 28px;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 5px;
+      color: #1a5276;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
       padding: 10px;
-      margin: 5px;
-      font-size: 16px;
+      margin-top: 5px;
+      border-radius: 8px;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      font-size: 16px;
+      background-color: #f9f9f9;
     }
 
     button {
+      margin-top: 20px;
+      padding: 12px 20px;
       background-color: #3498db;
       color: white;
       border: none;
+      font-size: 16px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: background 0.3s;
     }
 
     button:hover {
-      background-color: #2980b9;
+      background-color: #2e86c1;
     }
 
-    #chatbox {
-      border: 2px solid #ccc;
-      border-radius: 8px;
-      background-color: #ffffff;
-      height: 200px;
-      overflow-y: auto;
-      padding: 10px;
-      margin-top: 15px;
+    .orders {
+      margin-top: 40px;
+    }
+
+    .table-section {
       margin-bottom: 30px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .user {
-      color: #2980b9;
-      font-weight: bold;
-      margin: 5px 0;
-    }
-
-    .bot {
-      color: #27ae60;
-      margin: 5px 0;
     }
 
     ul {
-      list-style-type: disc;
-      margin-left: 30px;
+      list-style-type: none;
+      padding: 0;
     }
 
     li {
-      margin: 5px 0;
-      padding: 5px 10px;
-      background-color: #ffffff;
-      border-left: 4px solid #3498db;
-      border-radius: 4px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      background: #f6faff;
+      border: 1px solid #d6eaf8;
+      margin: 8px 0;
+      padding: 12px;
+      border-left: 6px solid #3498db;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
     li button {
-      margin-left: 10px;
       background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 10px;
       font-size: 14px;
-      padding: 5px 8px;
+      border-radius: 6px;
+      cursor: pointer;
     }
 
     li button:hover {
       background-color: #c0392b;
     }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Price, Dish, Table Dropdown, Add to Bill -->
-  <label for="priceInput">Choose Price:</label>
-  <input id="priceInput" type="number" placeholder="e.g. 120" />
+  <div class="container">
+    <h2>Restaurant Order System</h2>
 
-  <label for="dishInput">Choose Dish:</label>
-  <input id="dishInput" type="text" placeholder="e.g. Fried Rice" />
+    <label for="priceInput">Enter Price:</label>
+    <input id="priceInput" type="number" placeholder="e.g. 120" />
 
-  <label for="tableDropdown">Choose a Table:</label>
-  <select id="tableDropdown">
-    <option value="Table1">Table 1</option>
-    <option value="Table2">Table 2</option>
-    <option value="Table3">Table 3</option>
-  </select>
+    <label for="dishInput">Enter Dish Name:</label>
+    <input id="dishInput" type="text" placeholder="e.g. Fried Rice" />
 
-  <button onclick="addToBill()">Add to bill</button>
+    <label for="tableDropdown">Select Table:</label>
+    <select id="tableDropdown">
+      <option value="Table1">Table 1</option>
+      <option value="Table2">Table 2</option>
+      <option value="Table3">Table 3</option>
+    </select>
 
-  <h2>Chat with Waiter</h2>
-  <input id="userInput" type="text" placeholder="Type order (e.g. Fried Rice)" />
-  <select id="tableSelect">
-    <option value="Table1">Table 1</option>
-    <option value="Table2">Table 2</option>
-    <option value="Table3">Table 3</option>
-  </select>
-  <button onclick="sendMessage()">Send</button>
+    <button onclick="addToBill()">Add to Bill</button>
 
-  <div id="chatbox"></div>
+    <div class="orders">
+      <div class="table-section">
+        <h2>Table 1</h2>
+        <ul id="Table1"></ul>
+      </div>
 
-  <h2>Orders</h2>
-  <h3>Table 1</h3>
-  <ul id="Table1"></ul>
+      <div class="table-section">
+        <h2>Table 2</h2>
+        <ul id="Table2"></ul>
+      </div>
 
-  <h3>Table 2</h3>
-  <ul id="Table2"></ul>
-
-  <h3>Table 3</h3>
-  <ul id="Table3"></ul>
+      <div class="table-section">
+        <h2>Table 3</h2>
+        <ul id="Table3"></ul>
+      </div>
+    </div>
+  </div>
 
   <script>
     const apiBase = "https://crudcrud.com/api/8e185a642d484a80b0d099a13597e589/orders";
 
-    // Load orders on page load
     window.onload = function () {
+      clearAllOrders();
+    };
+
+    function clearAllOrders() {
       fetch(apiBase)
         .then(res => res.json())
         .then(data => {
-          data.forEach(order => addOrderToUI(order.message, order.table, order._id));
-        });
-    };
+          data.forEach(order => {
+            fetch(`${apiBase}/${order._id}`, { method: "DELETE" });
+          });
+        })
+        .catch(err => console.error("Error clearing orders:", err));
+    }
 
     function addToBill() {
       const price = document.getElementById('priceInput').value.trim();
@@ -144,9 +180,6 @@
       }
 
       const message = `${dish} - ₹${price}`;
-
-      addMessageToChat(`You: ${message}`, 'user');
-      addMessageToChat(`Waiter: Order for ${table} - "${message}" added.`, 'bot');
 
       const order = { message, table };
       fetch(apiBase, {
@@ -163,47 +196,14 @@
       document.getElementById('dishInput').value = '';
     }
 
-    function sendMessage() {
-      const input = document.getElementById('userInput');
-      const table = document.getElementById('tableSelect').value;
-      const message = input.value.trim();
-
-      if (!message) return;
-
-      addMessageToChat(`You: ${message}`, 'user');
-      addMessageToChat(`Waiter: Order for ${table} - "${message}" added.`, 'bot');
-
-      const order = { message, table };
-      fetch(apiBase, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(order)
-      })
-        .then(res => res.json())
-        .then(savedOrder => {
-          addOrderToUI(savedOrder.message, savedOrder.table, savedOrder._id);
-        });
-
-      input.value = '';
-    }
-
-    function addMessageToChat(text, type) {
-      const chatbox = document.getElementById('chatbox');
-      const msg = document.createElement('div');
-      msg.className = type;
-      msg.textContent = text;
-      chatbox.appendChild(msg);
-      chatbox.scrollTop = chatbox.scrollHeight;
-    }
-
     function addOrderToUI(message, table, id) {
       const ul = document.getElementById(table);
       const li = document.createElement('li');
-      li.textContent = message + ' ';
+      li.textContent = message;
       li.setAttribute('data-id', id);
 
       const delBtn = document.createElement('button');
-      delBtn.textContent = 'Delete Order';
+      delBtn.textContent = 'Delete';
       delBtn.onclick = () => deleteOrder(id, li);
       li.appendChild(delBtn);
 
